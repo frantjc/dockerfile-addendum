@@ -46,7 +46,8 @@ func run(cmd *cobra.Command, args []string) error {
 	)
 	switch {
 	case err != nil:
-		return err
+		// tarball doesn't exist, so there's nothing to do
+		return nil
 	case fi.IsDir():
 		return fmt.Errorf("directory %s is not a tar archive", fi.Name())
 	}
