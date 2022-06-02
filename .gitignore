@@ -1,0 +1,10 @@
+# IDE
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# dev
+bin/*
+!bin/.gitkeep
