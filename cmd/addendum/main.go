@@ -33,7 +33,7 @@ func init() {
 	)
 	rootCmd.Flags().BoolVar(&rm, "rm", false, "Remove the tarball after extracting its contents")
 	rootCmd.Flags().StringVarP(&out, "out", "o", ".", "Where to extract the tarball's contents to")
-	rootCmd.Flags().BoolVar(&gz, "gzip", false, "Force assuming the tarball is gzipped")
+	rootCmd.Flags().BoolVar(&gz, "gz", false, "Force assuming the tarball is gzipped")
 }
 
 func run(cmd *cobra.Command, args []string) error {
@@ -64,25 +64,38 @@ func run(cmd *cobra.Command, args []string) error {
 
 	tarball := tar.NewReader(r)
 
-	if rm {
-		defer os.Remove(path)
-	}
-
 	for {
 		header, err := tarball.Next()
 		switch {
 		case err == io.EOF:
+			if rm {
+				return os.Remove(path)
+			}
+
 			return nil
 		case err != nil:
 			return err
 		}
 
-		fullpath := filepath.Join(path, header.Name)
+		fullpath, err := filepath.Abs(
+			filepath.Join(out, header.Name),
+		)
+		if err != nil {
+			return fmt.Errorf("unable to determine path for tar header %s", header.Name)
+		}
 
 		switch header.Typeflag {
 		case tar.TypeDir:
-			if err := os.Mkdir(fullpath, header.FileInfo().Mode().Perm()); err != nil {
-				return fmt.Errorf("unable to create directory %s", fullpath)
+			di, err := os.Stat(fullpath)
+			switch {
+			case err == nil && !di.IsDir():
+				return fmt.Errorf("not a directory %s", fullpath)
+			case err == nil && di.IsDir():
+				// nothing to do
+			default:
+				if err := os.Mkdir(fullpath, header.FileInfo().Mode().Perm()); err != nil {
+					return fmt.Errorf("unable to create directory %s", fullpath)
+				}
 			}
 		case tar.TypeReg:
 			o, err := os.Create(fullpath)
@@ -92,7 +105,7 @@ func run(cmd *cobra.Command, args []string) error {
 			defer o.Close()
 
 			if _, err := io.CopyN(o, tarball, header.Size); err != nil {
-				return fmt.Errorf("unable to copy to file %s", fullpath)
+				return fmt.Errorf("unable to write to file %s", fullpath)
 			}
 		default:
 			return fmt.Errorf("unable to handle tar header type %b", header.Typeflag)

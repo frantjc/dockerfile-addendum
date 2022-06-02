@@ -24,9 +24,9 @@ INSTALL ?= sudo install
 .DEFAULT: install
 
 install: binaries
-	@$(INSTALL) $(CURDIR)/bin/sqncd $(CURDIR)/bin/addendum $(BIN)
+	@$(INSTALL) $(CURDIR)/bin/addendum $(BIN)
 
-bins binaries: addendum
+bin bins binaries: addendum
 
 addendum:
 	@$(GO) build -ldflags "-s -w -X $(MODULE).Version=$(VERSION) -X $(MODULE).Prerelease=$(PRERELEASE)" -o $(CURDIR)/bin $(CURDIR)/cmd/$@
@@ -40,12 +40,12 @@ fmt vet test:
 tidy vendor verify:
 	@$(GO) mod $@
 
+clean:
+	@rm -rf bin/*
+
 .PHONY: \
-	install bins binaries sqnc sqncd \
-	shims shimuses shimsource uses source placeholders \
+	install bin bins binaries addendum \
 	image img \
 	fmt vet test \
 	tidy vendor verify \
-	clean \
-	protos \
-	lint tools
+	clean 
