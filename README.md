@@ -1,6 +1,6 @@
 # dockerfile-ADDendum
 
-Small script to pair with the Dockerfile `ADD` directive to make an idempotent action regardless of if the `<src>` of the `ADD` is a local tar archive or a tar archive from a remove URL.
+Small script to pair with the Dockerfile `ADD` directive to make an idempotent action regardless of if the `<src>` of the `ADD` is a local tar archive or a tar archive from a remote URL.
 
 ## use case
 

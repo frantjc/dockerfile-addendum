@@ -113,11 +113,11 @@ func NewRoot() *cobra.Command {
 
 				if un {
 					if exe, err := os.Executable(); err == nil {
-						if exe, err = filepath.EvalSymlinks(exe); err == nil {
-							return os.Remove(exe)
+						if exesym, err := filepath.EvalSymlinks(exe); err == nil {
+							return os.Remove(exesym)
 						}
 
-						return err
+						return os.Remove(exe)
 					}
 
 					return err
