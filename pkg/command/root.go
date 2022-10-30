@@ -16,9 +16,9 @@ import (
 
 func NewRoot() *cobra.Command {
 	var (
-		gz, rm bool
-		out    string
-		cmd    = &cobra.Command{
+		gz, rm, un bool
+		out        string
+		cmd        = &cobra.Command{
 			Use:     "addendum",
 			Version: addendum.Semver(),
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -57,7 +57,17 @@ func NewRoot() *cobra.Command {
 					switch {
 					case err == io.EOF:
 						if rm {
-							return os.Remove(path)
+							if err = os.Remove(path); err != nil {
+								return err
+							}
+						}
+
+						if un {
+							if exe, err := os.Executable(); err == nil {
+								return os.Remove(exe)
+							} else {
+								return err
+							}
 						}
 
 						return nil
@@ -105,9 +115,10 @@ func NewRoot() *cobra.Command {
 	)
 
 	cmd.SetVersionTemplate("{{ .Name }}{{ .Version }} " + runtime.Version() + "\n")
-	cmd.Flags().BoolVar(&rm, "rm", false, "Remove the tarball after extracting its contents")
+	cmd.Flags().BoolVarP(&rm, "rm", "r", false, "Remove the tarball after extracting its contents")
+	cmd.Flags().BoolVarP(&gz, "gz", "g", false, "Force assuming the tarball is gzipped")
+	cmd.Flags().BoolVarP(&un, "un", "u", false, "Uninstall addendum on completion")
 	cmd.Flags().StringVarP(&out, "out", "o", ".", "Where to extract the tarball's contents to")
-	cmd.Flags().BoolVar(&gz, "gz", false, "Force assuming the tarball is gzipped")
 
 	return cmd
 }

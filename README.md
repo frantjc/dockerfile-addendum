@@ -20,7 +20,7 @@ This is where the ADDendum comes in:
 ARG zip=zip_3.0_x86_64.tgz
 ADD ${zip} /usr/local/bin
 COPY --from=ghcr.io/frantjc/dockerfile-addendum /addendum /usr/local/bin
-RUN addendum -o /usr/local/bin --rm /usr/local/bin/zip_3.0_x86_64.tgz
+RUN addendum -ruo /usr/local/bin /usr/local/bin/zip_3.0_x86_64.tgz
 ```
 
 Now this Dockerfile can be built with `--build-arg zip=<src>` where `<src>` is either a tar archive at a remote URL or a local tar archive.
