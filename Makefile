@@ -1,4 +1,5 @@
 GO = go
+GOLANGCI-LINT = golangci-lint
 DOCKER = docker
 INSTALL = sudo install
 
@@ -30,7 +31,7 @@ build:
 		-o ./bin \
 		./cmd/addendum
 
-image img: 
+image img:
 	@$(DOCKER) build -t $(IMAGE) $(BUILD_ARGS) .
 
 fmt vet test:
@@ -39,8 +40,12 @@ fmt vet test:
 download vendor verify:
 	@$(GO) mod $@
 
+lint:
+	@$(GOLANGCI-LINT) run --fix
+
 .PHONY: \
 	install \
 	image img \
 	fmt vet test \
-	vendor verify
+	download vendor verify \
+	lint
