@@ -1,14 +1,9 @@
 GO = go
-GIT = git
 DOCKER = docker
 INSTALL = sudo install
 
 VERSION ?= 0.0.0
 PRERELEASE ?= alpha0
-
-BRANCH ?= $(shell $(GIT) rev-parse --abbrev-ref HEAD 2>/dev/null)
-COMMIT ?= $(shell $(GIT) rev-parse HEAD 2>/dev/null)
-SHORT_SHA ?= $(shell $(GIT) rev-parse --short $(COMMIT))
 
 REGISTRY ?= ghcr.io
 REPOSITORY ?= frantjc/dockerfile-addendum
