@@ -30,7 +30,7 @@ func NewRoot() *cobra.Command {
 			RunE: func(cmd *cobra.Command, args []string) error {
 				var (
 					ctx        = cmd.Context()
-					logr       = addendum.LoggerFrom(ctx)
+					_          = addendum.LoggerFrom(ctx)
 					path       = args[0]
 					ext        = filepath.Ext(path)
 					compressed = gz || strings.EqualFold(ext, ".tgz") || strings.EqualFold(ext, ".gz") || strings.EqualFold(ext, ".tar.gz")
@@ -51,7 +51,6 @@ func NewRoot() *cobra.Command {
 						r io.Reader
 					)
 					if compressed {
-						logr.Info("uncompressing " + f.Name())
 						if r, err = gzip.NewReader(f); err != nil {
 							return err
 						}
@@ -68,7 +67,6 @@ func NewRoot() *cobra.Command {
 						switch {
 						case err == io.EOF:
 							if rm {
-								logr.Info("removing " + path)
 								if err = os.Remove(path); err != nil {
 									return err
 								}
@@ -116,7 +114,6 @@ func NewRoot() *cobra.Command {
 				if un {
 					if exe, err := os.Executable(); err == nil {
 						if exe, err = filepath.EvalSymlinks(exe); err == nil {
-							logr.Info("uninstalling " + exe)
 							return os.Remove(exe)
 						}
 

@@ -1,7 +1,5 @@
 # dockerfile-ADDendum
 
-> _not yet thoroughly tested_
-
 Small script to pair with the Dockerfile `ADD` directive to make an idempotent action regardless of if the `<src>` of the `ADD` is a local tar archive or a tar archive from a remove URL.
 
 ## use case
@@ -17,10 +15,10 @@ This is where the ADDendum comes in:
 ## usage
 
 ```Dockerfile
-ARG zip=zip_3.0_x86_64.tgz
-ADD ${zip} /usr/local/bin
+ARG tgz=zip_3.0_x86_64.tgz
+ADD ${tgz} /tmp
 COPY --from=ghcr.io/frantjc/dockerfile-addendum /addendum /usr/local/bin
-RUN addendum -ruo /usr/local/bin /usr/local/bin/zip_3.0_x86_64.tgz
+RUN addendum -ruo /usr/local/bin /tmp/$(basename ${tgz})
 ```
 
-Now this Dockerfile can be built with `--build-arg zip=<src>` where `<src>` is either a tar archive at a remote URL or a local tar archive.
+Now this Dockerfile can be built with `--build-arg tgz=<src>` where `<src>` is either a tar archive at a remote URL or a local tar archive.
