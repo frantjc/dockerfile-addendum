@@ -1,21 +1,27 @@
 package addendum
 
-import (
-	"fmt"
-	"runtime/debug"
-)
+import "runtime/debug"
 
 var (
+	// Version is the major.minor.patch version of addendum.
+	// Used to build a semantic version.
+	// Meant to be be overridden at build time.
 	Version = "0.0.0"
-
+	// Prerelease is the prelease of addendum e.g. "alpha".
+	// Used to build a semantic version.
+	// Meant to be overridden at build time.
 	Prerelease = ""
 )
 
+// Semver returns the semantic version of addendum as built from
+// Version, Prerelease and debug build info.
 func Semver() string {
 	version := Version
+
 	if Prerelease != "" {
-		version = fmt.Sprintf("%s-%s", version, Prerelease)
+		version += "-" + Prerelease
 	}
+
 	if buildInfo, ok := debug.ReadBuildInfo(); ok {
 		var (
 			revision string
@@ -29,16 +35,19 @@ func Semver() string {
 				modified = setting.Value == "true"
 			}
 		}
+
 		if revision != "" {
 			i := len(revision)
 			if i > 7 {
 				i = 7
 			}
-			version = fmt.Sprintf("%s+%s", version, revision[:i])
+			version += "+" + revision[:i]
 		}
+
 		if modified {
-			version = fmt.Sprintf("%s*", version)
+			version += "*"
 		}
 	}
+
 	return version
 }

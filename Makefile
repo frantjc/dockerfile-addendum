@@ -1,8 +1,7 @@
-BIN ?= /usr/local/bin
-
-GO ?= go
-GIT ?= git
-DOCKER ?= docker
+GO = go
+GIT = git
+DOCKER = docker
+INSTALL = sudo install
 
 VERSION ?= 0.0.0
 PRERELEASE ?= alpha0
@@ -19,17 +18,22 @@ IMAGE ?= $(REGISTRY)/$(REPOSITORY):$(TAG)
 
 BUILD_ARGS ?= --build-arg version=$(VERSION) --build-arg prerelease=$(PRERELEASE)
 
-INSTALL ?= sudo install
+BIN ?= /usr/local/bin
 
 .DEFAULT: install
 
-install: binaries
-	@$(INSTALL) $(CURDIR)/bin/addendum $(BIN)
+install: build
+	@$(INSTALL) ./bin/addendum $(BIN)
 
-bin bins binaries: addendum
-
-addendum:
-	@$(GO) build -ldflags "-s -w -X $(MODULE).Version=$(VERSION) -X $(MODULE).Prerelease=$(PRERELEASE)" -o $(CURDIR)/bin $(CURDIR)/cmd/$@
+build:
+	@$(GO) $@ \
+		-ldflags "\
+			-s -w \
+			-X $(MODULE).Version=$(VERSION) \
+			-X $(MODULE).Prerelease=$(PRERELEASE)\
+		" \
+		-o ./bin \
+		./cmd/addendum
 
 image img: 
 	@$(DOCKER) build -t $(IMAGE) $(BUILD_ARGS) .
@@ -37,15 +41,11 @@ image img:
 fmt vet test:
 	@$(GO) $@ ./...
 
-tidy vendor verify:
+download vendor verify:
 	@$(GO) mod $@
 
-clean:
-	@rm -rf bin/*
-
 .PHONY: \
-	install bin bins binaries addendum \
+	install \
 	image img \
 	fmt vet test \
-	tidy vendor verify \
-	clean 
+	vendor verify
