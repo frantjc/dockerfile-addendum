@@ -1,5 +1,5 @@
-FROM alpine:3.15
+FROM alpine:3.16
+COPY --from=ghcr.io/frantjc/dockerfile-addendum /addendum /usr/local/bin
 ARG tgz=test.tgz
 ADD ${tgz} /usr/local/bin/
-COPY --from=ghcr.io/frantjc/dockerfile-addendum /addendum /usr/local/bin
-RUN addendum -ruo /usr/local/bin /usr/local/bin/$(basename ${tgz})
+RUN addendum -ru /usr/local/bin/$(basename ${tgz})

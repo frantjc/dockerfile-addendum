@@ -15,10 +15,11 @@ This is where the ADDendum comes in:
 ## usage
 
 ```Dockerfile
+FROM scratch
+COPY --from=ghcr.io/frantjc/dockerfile-addendum /addendum /usr/local/bin
 ARG tgz=zip_3.0_x86_64.tgz
 ADD ${tgz} /tmp
-COPY --from=ghcr.io/frantjc/dockerfile-addendum /addendum /usr/local/bin
-RUN addendum -ruo /usr/local/bin /tmp/$(basename ${tgz})
+RUN addendum -ru /usr/local/bin /tmp/$(basename ${tgz})
 ```
 
 Now this Dockerfile can be built with `--build-arg tgz=<src>` where `<src>` is either a tar archive at a remote URL or a local tar archive.

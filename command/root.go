@@ -14,10 +14,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewRoot() *cobra.Command {
+func New() *cobra.Command {
 	var (
 		gz, rm, un bool
-		out        string
+		output     string
 		verbosity  int
 		cmd        = &cobra.Command{
 			Use:           "addendum",
@@ -31,7 +31,7 @@ func NewRoot() *cobra.Command {
 				var (
 					ctx        = cmd.Context()
 					_          = addendum.LoggerFrom(ctx)
-					path       = args[0]
+					path       = filepath.Clean(args[0])
 					ext        = filepath.Ext(path)
 					compressed = gz || strings.EqualFold(ext, ".tgz") || strings.EqualFold(ext, ".gz") || strings.EqualFold(ext, ".tar.gz")
 					fi, err    = os.Stat(path)
@@ -47,9 +47,11 @@ func NewRoot() *cobra.Command {
 						return err
 					}
 
-					var (
-						r io.Reader
-					)
+					if output == "" {
+						output = filepath.Dir(path)
+					}
+
+					var r io.Reader
 					if compressed {
 						if r, err = gzip.NewReader(f); err != nil {
 							return err
@@ -76,7 +78,7 @@ func NewRoot() *cobra.Command {
 						case err != nil:
 							return err
 						default:
-							fullpath, err := filepath.Abs(filepath.Join(out, header.Name)) //nolint:gosec
+							fullpath, err := filepath.Abs(filepath.Join(output, header.Name)) //nolint:gosec
 							if err != nil {
 								return fmt.Errorf("determine path for tar header: %s", header.Name)
 							}
@@ -133,7 +135,7 @@ func NewRoot() *cobra.Command {
 	cmd.Flags().BoolVarP(&rm, "rm", "r", false, "remove the tarball after extracting its contents")
 	cmd.Flags().BoolVarP(&gz, "gz", "g", false, "force assuming the tarball is gzipped")
 	cmd.Flags().BoolVarP(&un, "un", "u", false, "uninstall addendum on completion")
-	cmd.Flags().StringVarP(&out, "out", "o", ".", "where to extract the tarball's contents to")
+	cmd.Flags().StringVarP(&output, "output", "o", "", "where to extract the tarball's contents to")
 	cmd.Flags().CountVarP(&verbosity, "verbose", "v", "verbosity")
 
 	return cmd

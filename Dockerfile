@@ -1,5 +1,5 @@
 ARG base_image=scratch
-ARG build_image=golang:1.19-alpine3.15
+ARG build_image=golang:1.20-alpine3.16
 
 FROM ${base_image} AS base_image
 
