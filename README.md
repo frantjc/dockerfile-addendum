@@ -1,4 +1,4 @@
-# dockerfile-ADDendum
+# dockerfile-ADDendum [![CI](https://github.com/frantjc/dockerfile-addendum/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/frantjc/dockerfile-addendum/actions) [![godoc](https://pkg.go.dev/badge/github.com/frantjc/dockerfile-addendum.svg)](https://pkg.go.dev/github.com/frantjc/dockerfile-addendum) [![goreportcard](https://goreportcard.com/badge/github.com/frantjc/dockerfile-addendum)](https://goreportcard.com/report/github.com/frantjc/dockerfile-addendum) ![license](https://shields.io/github/license/frantjc/dockerfile-addendum)
 
 Small script to pair with the Dockerfile `ADD` directive to make an idempotent action regardless of if the `<src>` of the `ADD` is a local tar archive or a tar archive from a remote URL.
 

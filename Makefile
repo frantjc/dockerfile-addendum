@@ -1,40 +1,12 @@
 GO = go
+GIT = git
 GOLANGCI-LINT = golangci-lint
-DOCKER = docker
-INSTALL = sudo install
 
-VERSION ?= 0.0.0
-PRERELEASE ?= alpha0
+BIN = /usr/local/bin
 
-REGISTRY ?= ghcr.io
-REPOSITORY ?= frantjc/dockerfile-addendum
-MODULE ?= github.com/$(REPOSITORY)
-TAG ?= latest
-IMAGE ?= $(REGISTRY)/$(REPOSITORY):$(TAG)
+SEMVER ?= 1.0.0
 
-BUILD_ARGS ?= --build-arg version=$(VERSION) --build-arg prerelease=$(PRERELEASE)
-
-BIN ?= /usr/local/bin
-
-.DEFAULT: install
-
-install: build
-	@$(INSTALL) ./bin/addendum $(BIN)
-
-build:
-	@$(GO) $@ \
-		-ldflags "\
-			-s -w \
-			-X $(MODULE).Version=$(VERSION) \
-			-X $(MODULE).Prerelease=$(PRERELEASE)\
-		" \
-		-o ./bin \
-		./cmd/addendum
-
-image img:
-	@$(DOCKER) build -t $(IMAGE) $(BUILD_ARGS) .
-
-fmt vet test:
+fmt generate test:
 	@$(GO) $@ ./...
 
 download vendor verify:
@@ -43,9 +15,14 @@ download vendor verify:
 lint:
 	@$(GOLANGCI-LINT) run --fix
 
-.PHONY: \
-	install \
-	image img \
-	fmt vet test \
-	download vendor verify \
-	lint
+release:
+	@$(GIT) tag -a v$(SEMVER) -m v$(SEMVER)
+	@$(GIT) push --follow-tags
+
+gen: generate
+dl: download
+ven: vendor
+ver: verify
+format: fmt
+
+.PHONY: up fmt generate test download vendor verify lint shim clean gen dl ven ver format release

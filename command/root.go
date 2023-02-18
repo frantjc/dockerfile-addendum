@@ -25,7 +25,7 @@ func New() *cobra.Command {
 			SilenceErrors: true,
 			SilenceUsage:  true,
 			PersistentPreRun: func(cmd *cobra.Command, args []string) {
-				cmd.SetContext(addendum.WithLogger(cmd.Context(), addendum.NewLogger().V(verbosity)))
+				cmd.SetContext(addendum.WithLogger(cmd.Context(), addendum.NewLogger().V(2-verbosity)))
 			},
 			RunE: func(cmd *cobra.Command, args []string) error {
 				var (

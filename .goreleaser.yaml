@@ -1,0 +1,24 @@
+builds:
+  - main: ./cmd/addendum
+    ldflags:
+      - -s -w -X github.com/frantjc/addendum.Semver={{ .Version }}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+changelog:
+  use: github
+  filters:
+    exclude:
+      - merge conflict
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+dockers:
+  - image_templates:
+      - ghcr.io/logsquaredn/addendum:{{ .Version }}
+      - ghcr.io/logsquaredn/addendum:{{ .Major }}.{{ .Minor }}
+      - ghcr.io/logsquaredn/addendum:{{ .Major }}
+      - ghcr.io/logsquaredn/addendum:latest

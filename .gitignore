@@ -5,5 +5,5 @@
 # macOS
 .DS_Store
 
-bin/*
-!bin/.gitkeep
+# goreleaser
+dist/
