@@ -2,8 +2,6 @@ GO = go
 GIT = git
 GOLANGCI-LINT = golangci-lint
 
-BIN = /usr/local/bin
-
 SEMVER ?= 1.0.0
 
 fmt generate test:

@@ -19,7 +19,7 @@ changelog:
       - Merge branch
 dockers:
   - image_templates:
-      - ghcr.io/logsquaredn/dockerfile-addendum:{{ .Version }}
-      - ghcr.io/logsquaredn/dockerfile-addendum:{{ .Major }}.{{ .Minor }}
-      - ghcr.io/logsquaredn/dockerfile-addendum:{{ .Major }}
-      - ghcr.io/logsquaredn/dockerfile-addendum:latest
+      - ghcr.io/frantjc/dockerfile-addendum:{{ .Version }}
+      - ghcr.io/frantjc/dockerfile-addendum:{{ .Major }}.{{ .Minor }}
+      - ghcr.io/frantjc/dockerfile-addendum:{{ .Major }}
+      - ghcr.io/frantjc/dockerfile-addendum:latest
