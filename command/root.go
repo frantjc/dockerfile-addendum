@@ -24,6 +24,7 @@ func New() *cobra.Command {
 			Version:       addendum.Semver(),
 			SilenceErrors: true,
 			SilenceUsage:  true,
+			Args:          cobra.ExactArgs(1),
 			PersistentPreRun: func(cmd *cobra.Command, args []string) {
 				cmd.SetContext(addendum.WithLogger(cmd.Context(), addendum.NewLogger().V(2-verbosity)))
 			},
@@ -114,7 +115,8 @@ func New() *cobra.Command {
 				}
 
 				if un {
-					if exe, err := os.Executable(); err == nil {
+					exe, err := os.Executable()
+					if err == nil {
 						if exesym, err := filepath.EvalSymlinks(exe); err == nil {
 							return os.Remove(exesym)
 						}
@@ -127,7 +129,6 @@ func New() *cobra.Command {
 
 				return nil
 			},
-			Args: cobra.ExactArgs(1),
 		}
 	)
 
@@ -136,7 +137,7 @@ func New() *cobra.Command {
 	cmd.Flags().BoolVarP(&gz, "gz", "g", false, "force assuming the tarball is gzipped")
 	cmd.Flags().BoolVarP(&un, "un", "u", false, "uninstall addendum on completion")
 	cmd.Flags().StringVarP(&output, "output", "o", "", "where to extract the tarball's contents to")
-	cmd.Flags().CountVarP(&verbosity, "verbose", "v", "verbosity")
+	cmd.Flags().CountVarP(&verbosity, "verbose", "V", "verbosity")
 
 	return cmd
 }
