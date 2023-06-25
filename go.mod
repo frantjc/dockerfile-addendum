@@ -3,9 +3,9 @@ module github.com/frantjc/dockerfile-addendum
 go 1.20
 
 require (
-	github.com/go-logr/logr v1.2.2
-	github.com/spf13/cobra v1.6.1
-	go.uber.org/zap v1.19.0
+	github.com/go-logr/logr v1.2.4
+	github.com/spf13/cobra v1.7.0
+	go.uber.org/zap v1.24.0
 )
 
 require (
@@ -14,7 +14,7 @@ require (
 )
 
 require (
-	github.com/go-logr/zapr v1.2.3
-	github.com/inconshreveable/mousetrap v1.0.1 // indirect
+	github.com/go-logr/zapr v1.2.4
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 )
