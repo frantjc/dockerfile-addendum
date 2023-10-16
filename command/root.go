@@ -52,6 +52,10 @@ func New() *cobra.Command {
 						output = filepath.Dir(path)
 					}
 
+					if err = os.MkdirAll(output, 0o666); err != nil {
+						return err
+					}
+
 					var r io.Reader
 					if compressed {
 						if r, err = gzip.NewReader(f); err != nil {

@@ -2,7 +2,7 @@ GO = go
 GIT = git
 GOLANGCI-LINT = golangci-lint
 
-SEMVER ?= 1.0.0
+SEMVER ?= 1.0.1
 
 fmt generate test:
 	@$(GO) $@ ./...
