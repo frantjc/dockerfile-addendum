@@ -3,7 +3,7 @@ module github.com/frantjc/dockerfile-addendum
 go 1.20
 
 require (
-	github.com/go-logr/logr v1.2.4
+	github.com/go-logr/logr v1.3.0
 	github.com/spf13/cobra v1.7.0
 	go.uber.org/zap v1.24.0
 )
